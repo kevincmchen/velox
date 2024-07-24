@@ -29,17 +29,8 @@ TypePtr getRequestedType(const TypePtr& requestedType, std::string& name) {
   if (!requestedType) {
     return requestedType;
   }
-
-  try {
-    VELOX_CHECK(requestedType->isRow())
-    return requestedType->asRow().findChild(name);
-  } catch (const VeloxUserError& e) {
-    if (e.errorCode() == error_code::kInvalidArgument &&
-        e.message().find("Field not found") != std::string::npos) {
-      return nullptr;
-    }
-    throw e;
-  }
+  VELOX_CHECK(requestedType->isRow())
+  return requestedType->asRow().findChild(name);
 }
 } // namespace
 
